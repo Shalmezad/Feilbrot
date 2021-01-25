@@ -18,5 +18,6 @@ namespace Feilbrot.Brot2d
             return -1;
         }
         protected abstract ComplexPoint2d TransformPoint(ComplexPoint2d point2D, ComplexPoint2d initialPoint);
+        public abstract ComplexRect2d PreferredWindow();
     }
 }

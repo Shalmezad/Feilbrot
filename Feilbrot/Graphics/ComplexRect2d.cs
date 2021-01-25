@@ -14,6 +14,14 @@ namespace Feilbrot.Graphics
             this.height = height;
         }
 
+        public ComplexPoint2d PointAtPercent(decimal percentX, decimal percentY)
+        {
+            ComplexPoint2d result = new ComplexPoint2d();
+            result.r = percentX * width + point.r;
+            result.i = percentY * height + point.i;
+            return result;
+        }
+
         public override string ToString()
         {
             return $"ComplexRect2d#(point: {point}, width: {width}, height: {height})";

@@ -15,5 +15,11 @@ namespace Feilbrot.Brot2d
             result.i = ab2 + initialPoint.i;
             return result;
         }
+
+        override public ComplexRect2d PreferredWindow(){
+            ComplexPoint2d point = new ComplexPoint2d(-2.25M, -1.1M);
+            ComplexRect2d window = new ComplexRect2d(point, 3.0M, 2.2M);
+            return window;
+        }
     }
 }
