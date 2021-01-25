@@ -2,7 +2,7 @@ using Feilbrot.Graphics;
 
 namespace Feilbrot.Brot2d
 {
-    abstract class IMandel2d
+    public abstract class IMandel2d
     {
 
         public int PointInSet(ComplexPoint2d point2D, int iterations)

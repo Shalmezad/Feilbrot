@@ -2,7 +2,7 @@ using Feilbrot.Graphics;
 
 namespace Feilbrot.Brot2d
 {
-    class Circlebrot : IMandel2d
+    public class Circlebrot : IMandel2d
     {
         override protected ComplexPoint2d TransformPoint(ComplexPoint2d point2D, ComplexPoint2d initialPoint)
         {

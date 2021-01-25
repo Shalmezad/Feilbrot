@@ -2,7 +2,7 @@ using System;
 
 namespace Feilbrot.Graphics
 {
-    class ComplexRect2d
+    public class ComplexRect2d
     {
         public ComplexPoint2d point;
         public decimal width;

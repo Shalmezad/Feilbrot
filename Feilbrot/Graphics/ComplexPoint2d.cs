@@ -2,7 +2,7 @@ using System;
 
 namespace Feilbrot.Graphics
 {
-    struct ComplexPoint2d
+    public struct ComplexPoint2d
     {
 
         public decimal r;
