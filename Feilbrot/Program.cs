@@ -12,7 +12,7 @@ namespace Feilbrot
     {
         static void Main(string[] args)
         {
-            IMandel2d brot = new Mandelbrot();
+            IMandel2d brot = new Circlebrot();
             ComplexRect2d window = brot.PreferredWindow();
 
             int width = 640;
@@ -36,7 +36,7 @@ namespace Feilbrot
                         }
                         else{
                             float color = result / 100f;
-                            pixelRowSpan[x] = new Rgba32(color, color, 155f, 255f);
+                            pixelRowSpan[x] = new Rgba32(color, color, 0.5f, 1.0f);
                         }
                     }
                 }
