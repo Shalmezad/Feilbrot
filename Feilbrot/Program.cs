@@ -62,14 +62,9 @@ namespace Feilbrot
 
         private static void BrotToPointCloud(IMandel3d brot, int resolution, int iterations =200)
         {
-            using(StreamWriter file = new StreamWriter("testCloud.pcd"))
+            using(StreamWriter file = new StreamWriter("testCloud.xyz"))
             {
-                // PCD Format:
-                // https://pointclouds.org/documentation/tutorials/pcd_file_format.html
-                file.WriteLineAsync("VERSION .7");
-                file.WriteLineAsync("FIELDS x y z");
-                file.WriteLineAsync("DATA ascii");
-
+                // xyz format is literally ascii xyz points
                 var window = brot.PreferredWindow();
 
                 for(int xIdx=0; xIdx < resolution; xIdx++)
@@ -85,7 +80,7 @@ namespace Feilbrot
                             int result = brot.PointInSet(testPoint, iterations);
                             if(result == -1){
                                 // In the set:
-                                file.WriteLineAsync($"{testPoint.r} {testPoint.i} {testPoint.u}");
+                                file.WriteLine($"{testPoint.r} {testPoint.i} {testPoint.u}");
                             }
                         }
                     }
@@ -96,12 +91,19 @@ namespace Feilbrot
 
         static void Main(string[] args)
         {
+            /*
             IMandel2d brot = new Chickenbrot2d();
 
             int width = 128;
             int height = 128;
             int iterations = 500;
             BrotToImage(brot, width, height, iterations);
+            */
+
+            IMandel3d brot = new Chickenbrot3d();
+            int resolution = 20;
+            int iterations = 200;
+            BrotToPointCloud(brot, resolution, iterations);
         }
     }
 }
