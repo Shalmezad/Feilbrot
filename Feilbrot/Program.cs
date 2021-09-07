@@ -8,7 +8,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 using Feilbrot.Brot2d;
+using Feilbrot.Brot3d;
 using Feilbrot.Graphics;
+using System.IO;
 
 namespace Feilbrot
 {
@@ -57,9 +59,44 @@ namespace Feilbrot
                 image.Save("test.png"); 
             }            
         }
+
+        private static void BrotToPointCloud(IMandel3d brot, int resolution, int iterations =200)
+        {
+            using(StreamWriter file = new StreamWriter("testCloud.pcd"))
+            {
+                // PCD Format:
+                // https://pointclouds.org/documentation/tutorials/pcd_file_format.html
+                file.WriteLineAsync("VERSION .7");
+                file.WriteLineAsync("FIELDS x y z");
+                file.WriteLineAsync("DATA ascii");
+
+                var window = brot.PreferredWindow();
+
+                for(int xIdx=0; xIdx < resolution; xIdx++)
+                {
+                    for(int yIdx=0; yIdx < resolution; yIdx++)
+                    {
+                        for(int zIdx=0; zIdx < resolution; zIdx++)
+                        {
+                            decimal percX = xIdx * 1.0M / resolution;
+                            decimal percY = yIdx * 1.0M / resolution;
+                            decimal percZ = zIdx * 1.0M / resolution;
+                            ComplexPoint3d testPoint = window.PointAtPercent(percX, percY, percZ);
+                            int result = brot.PointInSet(testPoint, iterations);
+                            if(result == -1){
+                                // In the set:
+                                file.WriteLineAsync($"{testPoint.r} {testPoint.i} {testPoint.u}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
         static void Main(string[] args)
         {
-            IMandel2d brot = new Chickenbrot();
+            IMandel2d brot = new Chickenbrot2d();
 
             int width = 128;
             int height = 128;
