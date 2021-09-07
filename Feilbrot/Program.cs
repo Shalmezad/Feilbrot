@@ -14,17 +14,12 @@ namespace Feilbrot
 {
     class Program
     {
-        static void Main(string[] args)
+
+        private static void BrotToImage(IMandel2d brot, int imgWidth, int imgHeight, int iterations)
         {
-            IMandel2d brot = new Chickenbrot();
+            
             ComplexRect2d window = brot.PreferredWindow();
-
-            int width = 128;
-            int height = 128;
-            int iterations = 500;
-
-
-            using(var image = new Image<Rgba32>(width, height))
+            using(var image = new Image<Rgba32>(imgWidth, imgHeight))
             {
                 for(int y = 0; y < image.Height; y++)
                 {
@@ -60,7 +55,16 @@ namespace Feilbrot
                     }
                 }
                 image.Save("test.png"); 
-            }
+            }            
+        }
+        static void Main(string[] args)
+        {
+            IMandel2d brot = new Chickenbrot();
+
+            int width = 128;
+            int height = 128;
+            int iterations = 500;
+            BrotToImage(brot, width, height, iterations);
         }
     }
 }
