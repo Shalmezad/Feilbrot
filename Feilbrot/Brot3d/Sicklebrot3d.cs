@@ -2,7 +2,7 @@ using Feilbrot.Graphics;
 
 namespace Feilbrot.Brot3d
 {
-    public class Testbrot3d : IMandel3d
+    public class Sicklebrot3d : IMandel3d
     {
         override protected ComplexPoint3d TransformPoint(ComplexPoint3d point3D, ComplexPoint3d initialPoint)
         {
@@ -14,9 +14,9 @@ namespace Feilbrot.Brot3d
             decimal ac2 = point3D.r * point3D.u * 2;
 
             ComplexPoint3d result = new ComplexPoint3d();
-            result.r = c2 + initialPoint.r;
-            result.i = b2 - ab2 + initialPoint.i;
-            result.u = a2 + initialPoint.u;
+            result.r = a2 - c2 + initialPoint.r;
+            result.i = ac2 + ab2 + initialPoint.i;
+            result.u = c2 - b2 + initialPoint.u;
             return result;
         }
 

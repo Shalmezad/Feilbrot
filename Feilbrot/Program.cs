@@ -106,8 +106,8 @@ namespace Feilbrot
             BrotToImage(brot, width, height, iterations);
             */
 
-            IMandel3d brot = new Testbrot3d();
-            int resolution = 150;
+            IMandel3d brot = new Chickenbrot3d();
+            int resolution = 300;
             int iterations = 100;
             BrotToPointCloud(brot, resolution, iterations);
         }
