@@ -71,7 +71,9 @@ namespace Feilbrot
                 {
                     for(int yIdx=0; yIdx < resolution; yIdx++)
                     {
-                        for(int zIdx=0; zIdx < resolution; zIdx++)
+                        var points = new ConcurrentBag<ComplexPoint3d>();
+                        var zIdxs = Enumerable.Range(0, resolution).ToList();
+                        Parallel.ForEach(zIdxs, zIdx =>
                         {
                             decimal percX = xIdx * 1.0M / resolution;
                             decimal percY = yIdx * 1.0M / resolution;
@@ -80,8 +82,12 @@ namespace Feilbrot
                             int result = brot.PointInSet(testPoint, iterations);
                             if(result == -1){
                                 // In the set:
-                                file.WriteLine($"{testPoint.r} {testPoint.i} {testPoint.u}");
+                                points.Add(testPoint);
                             }
+                        });
+                        foreach(var point in points)
+                        {
+                            file.WriteLine($"{point.r} {point.i} {point.u}");
                         }
                     }
                 }
@@ -100,9 +106,9 @@ namespace Feilbrot
             BrotToImage(brot, width, height, iterations);
             */
 
-            IMandel3d brot = new Chickenbrot3d();
-            int resolution = 20;
-            int iterations = 200;
+            IMandel3d brot = new Testbrot3d();
+            int resolution = 150;
+            int iterations = 100;
             BrotToPointCloud(brot, resolution, iterations);
         }
     }

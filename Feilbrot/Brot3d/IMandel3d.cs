@@ -12,7 +12,7 @@ namespace Feilbrot.Brot3d
                 point3D = TransformPoint(point3D, initialPoint);
                 // TODO: Verify distance for 3d point:
                 decimal distance = point3D.r * point3D.r + point3D.i * point3D.i + point3D.u * point3D.u;
-                if(distance > 4){
+                if(distance > 15){
                     return i;
                 }
             }
