@@ -1,4 +1,5 @@
 using System;
+using Feilbrot.Graphics;
 
 namespace Feilbrot.Volumes
 {
@@ -13,6 +14,15 @@ namespace Feilbrot.Volumes
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+
+        public static Point3d FromComplexPoint(ComplexPoint3d point3D)
+        {
+            return new Point3d(point3D.r, point3D.i, point3D.u);
+        }
+        public ComplexPoint3d ToComplexPoint()
+        {
+            return new ComplexPoint3d(x,y,z);
         }
 
         public override string ToString()

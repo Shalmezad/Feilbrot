@@ -10,6 +10,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using Feilbrot.Brot2d;
 using Feilbrot.Brot3d;
 using Feilbrot.Graphics;
+using Feilbrot.Volumes;
 using System.IO;
 
 namespace Feilbrot
@@ -112,6 +113,12 @@ namespace Feilbrot
             int iterations = 100;
             BrotToPointCloud(brot, resolution, iterations);
             */
+
+            IMandel3d brot = new Chickenbrot3d();
+            IPointTestable3d volume = new Brot3dTestable(brot);
+            //IPointTestable3d volume = new Sphere();
+            MeshFactory3d meshFactory3D = new MeshFactory3d();
+            meshFactory3D.TestableToMesh(volume);
         }
     }
 }
