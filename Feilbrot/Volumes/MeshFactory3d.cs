@@ -1,5 +1,6 @@
 using System.IO;
 using Feilbrot.Graphics;
+using System;
 
 namespace Feilbrot.Volumes
 {
@@ -16,34 +17,39 @@ namespace Feilbrot.Volumes
             
             using(StreamWriter file = new StreamWriter("testCloud.xyz"))
             {
-                // Ok, so now the fun part:
-                // We're going to try starting from each major plane (xy, yz, xz) from both directions (+/-)
-                // And "march" until we hit a point
-                // By getting points from the outside of each plane, we should hopefully get a rough approximation of the shape
                 Cube3d enclosingVolume = testable3D.EnclosingVolume();
                 Point3d testPoint = new Point3d();
 
-                // 1) Walk X/Y from +
-                for(int xIdx = 0; xIdx < planeResolution; xIdx ++){
-                    for(int yIdx = 0; yIdx < planeResolution; yIdx++){
-                        testPoint = enclosingVolume.PointAtPercent(xIdx * 1.0M / planeResolution, 
-                                                                   yIdx * 1.0M / planeResolution,
-                                                                   0.0M);
-                        decimal marchDistance = enclosingVolume.point.z;
-                        while(marchDistance < enclosingVolume.point.z + enclosingVolume.depth)
-                        {
-                            marchDistance += marchResolution;
-                            testPoint.z = enclosingVolume.point.z + marchDistance;
+                // So, new trick:
+                // We only care about the outer most points
+                // So, we'll check each latitude/longitude, and march towards the center
+
+                for(int latIdx = 0; latIdx < planeResolution; latIdx++){
+                    for(int longIdx = 0; longIdx < planeResolution; longIdx++){
+                        decimal latitude = 2.0M * (decimal)Math.PI * (latIdx * 1.0M / planeResolution) - (decimal)Math.PI;
+                        decimal longitude = 2.0M * (decimal)Math.PI * (longIdx * 1.0M / planeResolution) - (decimal)Math.PI;
+                        // We start from full distance:
+                        decimal curDistance = 2.0M;
+                        // And "march" towards center
+                        while(curDistance > 0){
+                            // https://stackoverflow.com/a/10475267/978509
+                            // Make the point:
+                            testPoint.x = curDistance * (decimal)Math.Cos((double)longitude) * (decimal)Math.Sin((double)latitude);
+                            testPoint.y = curDistance * (decimal)Math.Sin((double)longitude) * (decimal)Math.Cos((double)latitude);
+                            testPoint.z = curDistance * (decimal)Math.Cos((double)latitude);
+                            // Test the point:
                             if(testable3D.PointInVolume(testPoint))
                                 break;
+
+                            curDistance -= marchResolution;
                         }
-                        if(marchDistance < enclosingVolume.point.z + enclosingVolume.depth)
-                        {
-                            // Record it
-                            file.WriteLine($"{testPoint.x} {testPoint.y} {marchDistance}");
+                        if(curDistance > 0){
+                            // Save it
+                            file.WriteLine($"{testPoint.x} {testPoint.y} {testPoint.z}");
                         }
                     }
                 }
+
             } 
         }
     }
