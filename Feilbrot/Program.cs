@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +16,6 @@ using Feilbrot.Brot3d;
 using Feilbrot.ColorSchemes;
 using Feilbrot.Graphics;
 using Feilbrot.Volumes;
-using System.IO;
 
 namespace Feilbrot
 {
@@ -89,32 +92,56 @@ namespace Feilbrot
             }
         }
 
-
-        static void Main(string[] args)
+        static Dictionary<string, Type> Mandel2dCLIMap()
         {
-            IMandel2d brot = new Mandelbrot2d();
+            Dictionary<string, Type> result = new Dictionary<string, Type>();
+            result.Add("chicken", typeof(Chickenbrot2d));
+            return result;
+        }
 
-            int width = 1024;
-            int height = 1024;
-            int iterations = 500;
-            BrotToImage(brot, width, height, iterations, new SinColorScheme(), "docs/renders/Colorschemes/sin.png");
+        static Dictionary<string, Type> ColorschemeCLIMap()
+        {
+            Dictionary<string, Type> result = new Dictionary<string, Type>();
+            result.Add("graycyan", typeof(GrayCyanColorScheme));
+            result.Add("invert", typeof(InvertColorScheme));
+            return result;
+        }
 
+        static int Main(string[] args)
+        {
+            var rootCommand = new RootCommand
+            {
+                new Option<int>(
+                    "--img-width",
+                    getDefaultValue: () => 256
+                ),
+                new Option<int>(
+                    "--img-height",
+                    getDefaultValue: () => 256
+                ),
+                new Option<int>(
+                    "--iterations",
+                    getDefaultValue: () => 500
+                ),
+                new Option<string>(
+                    "--brotname",
+                    getDefaultValue: () => "chicken"
+                ),
+                new Option<string>(
+                    "--colorname",
+                    getDefaultValue: () => "graycyan"
+                )
+            };
 
-            /*
-            IMandel3d brot = new Chickenbrot3d();
-            int resolution = 300;
-            int iterations = 100;
-            BrotToPointCloud(brot, resolution, iterations);
-            */
-
-            /*
-            IMandel3d brot = new Sicklebrot3d();
-            IPointTestable3d volume = new Brot3dTestable(brot);
-            //IPointTestable3d volume = new Sphere();
-            MeshFactory3d meshFactory3D = new MeshFactory3d();
-            meshFactory3D.TestableToMesh(volume);
-            */
-
+            rootCommand.Handler = CommandHandler.Create<int, int, int, string, string>((imgWidth, imgHeight, iterations, brotname, colorname) =>
+            {
+                Type brotClass = Mandel2dCLIMap()[brotname];
+                IMandel2d brot = (IMandel2d)Activator.CreateInstance(brotClass);
+                Type schemeClass = ColorschemeCLIMap()[colorname];
+                IColorScheme colorscheme = (IColorScheme)Activator.CreateInstance(schemeClass);
+                BrotToImage(brot, imgWidth, imgHeight, iterations, colorscheme, "test.png");
+            });
+            return rootCommand.InvokeAsync(args).Result;
         }
     }
 }
