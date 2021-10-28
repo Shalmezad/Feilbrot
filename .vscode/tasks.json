@@ -14,11 +14,22 @@
         // Do not generate summary otherwise it leads to duplicate errors in Problems panel
         "/consoleloggerparameters:NoSummary"
       ],
-      "group": "build",
+      //"group": "build",
       "presentation": {
         "reveal": "silent"
       },
       "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "Feilbrot"
+      ],
+      "group": "build"
     }
   ]
 }

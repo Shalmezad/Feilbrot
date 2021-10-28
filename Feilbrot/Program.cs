@@ -9,6 +9,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 using Feilbrot.Brot2d;
 using Feilbrot.Brot3d;
+using Feilbrot.ColorSchemes;
 using Feilbrot.Graphics;
 using Feilbrot.Volumes;
 using System.IO;
@@ -18,7 +19,7 @@ namespace Feilbrot
     class Program
     {
 
-        private static void BrotToImage(IMandel2d brot, int imgWidth, int imgHeight, int iterations)
+        private static void BrotToImage(IMandel2d brot, int imgWidth, int imgHeight, int iterations, IColorScheme colorScheme, string imagePath="test.png")
         {
             
             ComplexRect2d window = brot.PreferredWindow();
@@ -41,14 +42,7 @@ namespace Feilbrot
                             decimal percY = y * 1.0M / image.Height;
                             ComplexPoint2d testPoint = window.PointAtPercent(percX, percY);
                             int result = brot.PointInSet(testPoint, iterations);
-                            if(result == -1){
-                                row[x] = new Rgba32(0,0,0,255);
-                            }
-                            else{
-                                // TODO: Should probably come up with a better way of making colors pop than multiplying by 10 causing it to hit the ceiling.
-                                float color = result * 10.0f / iterations;
-                                row[x] = new Rgba32(0.1f, color * 0.5f + 0.1f, color * 0.9f + 0.1f, 1.0f);
-                            }
+                            row[x] = colorScheme.ColorForResult(result, iterations);
                         }
                     });
 
@@ -57,7 +51,7 @@ namespace Feilbrot
                         pixelRowSpan[x] = row[x];
                     }
                 }
-                image.Save("test.png"); 
+                image.Save(imagePath); 
             }            
         }
 
@@ -98,14 +92,13 @@ namespace Feilbrot
 
         static void Main(string[] args)
         {
-            /*
-            IMandel2d brot = new Chickenbrot2d();
+            IMandel2d brot = new Mandelbrot2d();
 
-            int width = 128;
-            int height = 128;
+            int width = 1024;
+            int height = 1024;
             int iterations = 500;
-            BrotToImage(brot, width, height, iterations);
-            */
+            BrotToImage(brot, width, height, iterations, new SinColorScheme(), "docs/renders/Colorschemes/sin.png");
+
 
             /*
             IMandel3d brot = new Chickenbrot3d();
@@ -114,11 +107,14 @@ namespace Feilbrot
             BrotToPointCloud(brot, resolution, iterations);
             */
 
-            IMandel3d brot = new Chickenbrot3d();
+            /*
+            IMandel3d brot = new Sicklebrot3d();
             IPointTestable3d volume = new Brot3dTestable(brot);
             //IPointTestable3d volume = new Sphere();
             MeshFactory3d meshFactory3D = new MeshFactory3d();
             meshFactory3D.TestableToMesh(volume);
+            */
+
         }
     }
 }
