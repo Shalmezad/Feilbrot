@@ -1,3 +1,4 @@
+using System;
 using Feilbrot.Graphics;
 
 namespace Feilbrot.Brot2d
@@ -9,7 +10,13 @@ namespace Feilbrot.Brot2d
         {
             ComplexPoint2d initialPoint = point2D;
             for(int i=0; i< iterations; i++){
-                point2D = TransformPoint(point2D, initialPoint);
+                try {
+                    point2D = TransformPoint(point2D, initialPoint);
+                }
+                catch(DivideByZeroException)
+                {
+                    return i;
+                }
                 decimal distance = point2D.r * point2D.r + point2D.i * point2D.i;
                 if(distance > 4){
                     return i;

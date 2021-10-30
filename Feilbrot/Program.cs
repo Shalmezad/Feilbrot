@@ -97,7 +97,8 @@ namespace Feilbrot
             Dictionary<Brot2dEnum, Type> result = new Dictionary<Brot2dEnum, Type>();
             result.Add(Brot2dEnum.Chicken, typeof(Chickenbrot2d));
             result.Add(Brot2dEnum.Circle, typeof(Circlebrot2d));
-            result.Add(Brot2dEnum.Mandlebrot, typeof(Mandelbrot2d));
+            result.Add(Brot2dEnum.Mandelbrot, typeof(Mandelbrot2d));
+            result.Add(Brot2dEnum.MantaRay, typeof(MantaRay2d));
             return result;
         }
 
@@ -106,7 +107,7 @@ namespace Feilbrot
             Dictionary<ColorSchemeEnum, Type> result = new Dictionary<ColorSchemeEnum, Type>();
             result.Add(ColorSchemeEnum.GrayCyan, typeof(GrayCyanColorScheme));
             result.Add(ColorSchemeEnum.Invert, typeof(InvertColorScheme));
-            result.Add(ColorSchemeEnum.Sin, typeof(InvertColorScheme));
+            result.Add(ColorSchemeEnum.Sin, typeof(SinColorScheme));
             return result;
         }
 

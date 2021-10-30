@@ -2,5 +2,6 @@ enum Brot2dEnum
 {
     Chicken,
     Circle,
-    Mandlebrot
+    Mandelbrot,
+    MantaRay
 }
