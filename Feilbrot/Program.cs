@@ -99,6 +99,7 @@ namespace Feilbrot
             result.Add(Brot2dEnum.Circle, typeof(Circlebrot2d));
             result.Add(Brot2dEnum.Mandelbrot, typeof(Mandelbrot2d));
             result.Add(Brot2dEnum.MantaRay, typeof(MantaRay2d));
+            result.Add(Brot2dEnum.Testbrot, typeof(Testbrot2d));
             return result;
         }
 

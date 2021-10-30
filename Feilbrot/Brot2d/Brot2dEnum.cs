@@ -3,5 +3,6 @@ enum Brot2dEnum
     Chicken,
     Circle,
     Mandelbrot,
-    MantaRay
+    MantaRay,
+    Testbrot
 }
