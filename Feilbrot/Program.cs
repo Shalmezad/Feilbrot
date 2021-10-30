@@ -133,16 +133,20 @@ namespace Feilbrot
                 new Option<ColorSchemeEnum>(
                     "--colorname",
                     getDefaultValue: () => ColorSchemeEnum.GrayCyan
+                ),
+                new Option<FileInfo>(
+                    "--outputfile",
+                    getDefaultValue: () => new FileInfo("test.png")
                 )
             };
 
-            rootCommand.Handler = CommandHandler.Create<int, int, int, Brot2dEnum, ColorSchemeEnum>((imgWidth, imgHeight, iterations, brotname, colorname) =>
+            rootCommand.Handler = CommandHandler.Create<int, int, int, Brot2dEnum, ColorSchemeEnum, FileInfo>((imgWidth, imgHeight, iterations, brotname, colorname, outputfile) =>
             {
                 Type brotClass = Mandel2dCLIMap()[brotname];
                 IMandel2d brot = (IMandel2d)Activator.CreateInstance(brotClass);
                 Type schemeClass = ColorschemeCLIMap()[colorname];
                 IColorScheme colorscheme = (IColorScheme)Activator.CreateInstance(schemeClass);
-                BrotToImage(brot, imgWidth, imgHeight, iterations, colorscheme, "test.png");
+                BrotToImage(brot, imgWidth, imgHeight, iterations, colorscheme, outputfile.ToString());
             });
             return rootCommand.InvokeAsync(args).Result;
         }
