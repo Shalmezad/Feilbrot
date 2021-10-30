@@ -92,18 +92,21 @@ namespace Feilbrot
             }
         }
 
-        static Dictionary<string, Type> Mandel2dCLIMap()
+        static Dictionary<Brot2dEnum, Type> Mandel2dCLIMap()
         {
-            Dictionary<string, Type> result = new Dictionary<string, Type>();
-            result.Add("chicken", typeof(Chickenbrot2d));
+            Dictionary<Brot2dEnum, Type> result = new Dictionary<Brot2dEnum, Type>();
+            result.Add(Brot2dEnum.Chicken, typeof(Chickenbrot2d));
+            result.Add(Brot2dEnum.Circle, typeof(Circlebrot2d));
+            result.Add(Brot2dEnum.Mandlebrot, typeof(Mandelbrot2d));
             return result;
         }
 
-        static Dictionary<string, Type> ColorschemeCLIMap()
+        static Dictionary<ColorSchemeEnum, Type> ColorschemeCLIMap()
         {
-            Dictionary<string, Type> result = new Dictionary<string, Type>();
-            result.Add("graycyan", typeof(GrayCyanColorScheme));
-            result.Add("invert", typeof(InvertColorScheme));
+            Dictionary<ColorSchemeEnum, Type> result = new Dictionary<ColorSchemeEnum, Type>();
+            result.Add(ColorSchemeEnum.GrayCyan, typeof(GrayCyanColorScheme));
+            result.Add(ColorSchemeEnum.Invert, typeof(InvertColorScheme));
+            result.Add(ColorSchemeEnum.Sin, typeof(InvertColorScheme));
             return result;
         }
 
@@ -123,17 +126,17 @@ namespace Feilbrot
                     "--iterations",
                     getDefaultValue: () => 500
                 ),
-                new Option<string>(
+                new Option<Brot2dEnum>(
                     "--brotname",
-                    getDefaultValue: () => "chicken"
+                    getDefaultValue: () => Brot2dEnum.Chicken
                 ),
-                new Option<string>(
+                new Option<ColorSchemeEnum>(
                     "--colorname",
-                    getDefaultValue: () => "graycyan"
+                    getDefaultValue: () => ColorSchemeEnum.GrayCyan
                 )
             };
 
-            rootCommand.Handler = CommandHandler.Create<int, int, int, string, string>((imgWidth, imgHeight, iterations, brotname, colorname) =>
+            rootCommand.Handler = CommandHandler.Create<int, int, int, Brot2dEnum, ColorSchemeEnum>((imgWidth, imgHeight, iterations, brotname, colorname) =>
             {
                 Type brotClass = Mandel2dCLIMap()[brotname];
                 IMandel2d brot = (IMandel2d)Activator.CreateInstance(brotClass);
