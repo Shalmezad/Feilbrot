@@ -1,13 +1,15 @@
 using System.IO;
 using Feilbrot.Graphics;
 using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace Feilbrot.Volumes
 {
     public class MeshFactory3d
     {
 
-        int planeResolution = 100;
+        public int planeResolution = 100;
         decimal marchResolution = 0.001M;
         public MeshFactory3d()
         {
@@ -18,14 +20,16 @@ namespace Feilbrot.Volumes
             using(StreamWriter file = new StreamWriter("testCloud.xyz"))
             {
                 Cube3d enclosingVolume = testable3D.EnclosingVolume();
-                Point3d testPoint = new Point3d();
 
                 // So, new trick:
                 // We only care about the outer most points
                 // So, we'll check each latitude/longitude, and march towards the center
 
                 for(int latIdx = 0; latIdx < planeResolution; latIdx++){
-                    for(int longIdx = 0; longIdx < planeResolution; longIdx++){
+                    Console.WriteLine($"{latIdx}/{planeResolution}");
+                    ConcurrentBag<string> lines = new ConcurrentBag<string>();
+                    Parallel.For(0, planeResolution, longIdx => {
+                        Point3d testPoint = new Point3d();
                         decimal latitude = 2.0M * (decimal)Math.PI * (latIdx * 1.0M / planeResolution) - (decimal)Math.PI;
                         decimal longitude = 2.0M * (decimal)Math.PI * (longIdx * 1.0M / planeResolution) - (decimal)Math.PI;
                         // We start from full distance:
@@ -45,8 +49,11 @@ namespace Feilbrot.Volumes
                         }
                         if(curDistance > 0){
                             // Save it
-                            file.WriteLine($"{testPoint.x} {testPoint.y} {testPoint.z}");
+                            lines.Add($"{testPoint.x/2.0M} {testPoint.y} {testPoint.z}");
                         }
+                    });
+                    foreach(var line in lines){
+                        file.WriteLine(line);
                     }
                 }
 
